@@ -1,16 +1,22 @@
 import React, { useEffect } from "react";
 import Todo from "./Todo";
 import { setTodos, TodoActions } from "../redux/actions";
-import { RootState } from "../redux/types";
+import { RootState, VisibilityFilterTypes } from "../redux/types";
 import { connect } from "react-redux";
-import { TodoItem } from "../redux/types";
+import { TodoItem, TodoState } from "../redux/types";
+import { getTodosByVisibilityFilter } from "../redux/selectors";
 
 type TodoListProps = {
-  todos: Array<TodoItem>;
+  todos: TodoState;
+  visibilityFilter: VisibilityFilterTypes;
   setTodos: (todos: Array<TodoItem>) => TodoActions;
 };
 
-const TodoList: React.FC<TodoListProps> = ({ todos, setTodos }) => {
+const TodoList: React.FC<TodoListProps> = ({
+  todos,
+  setTodos,
+  visibilityFilter,
+}) => {
   useEffect(() => {
     const data: Array<TodoItem> = [
       { id: 1, content: "do something", completed: false },
@@ -18,10 +24,14 @@ const TodoList: React.FC<TodoListProps> = ({ todos, setTodos }) => {
     ];
     setTodos(data);
   }, [setTodos]);
+  const visibleTodos: TodoItem[] = getTodosByVisibilityFilter(
+    todos,
+    visibilityFilter
+  );
   return (
     <ul className="todo-list">
-      {todos && todos.length
-        ? todos.map((todo: any, index: any) => {
+      {visibleTodos && visibleTodos.length
+        ? visibleTodos.map((todo: TodoItem) => {
             return <Todo key={`todo-${todo.id}`} todo={todo} />;
           })
         : "No todos, yay!"}
@@ -30,7 +40,8 @@ const TodoList: React.FC<TodoListProps> = ({ todos, setTodos }) => {
 };
 
 const mapStateToProps = (state: RootState) => {
-  const todos = state.todos.todoItems;
-  return { todos };
+  const todos = state.todos;
+  const visibilityFilter = state.visibilityFilter;
+  return { todos, visibilityFilter };
 };
 export default connect(mapStateToProps, { setTodos })(TodoList);
