@@ -1,5 +1,5 @@
 import { ActionTypes } from "./actionTypes";
-import { TodoItem } from "./types";
+import { TodoItem, VisibilityFilterTypes } from "./types";
 
 type SetTodosAction = {
   type: ActionTypes.SET_TODOS;
@@ -11,4 +11,16 @@ export const setTodos = (todos: TodoItem[]): SetTodosAction => ({
   payload: { todos },
 });
 
-export type TodoActions = SetTodosAction;
+type SetFilterAction = {
+  type: ActionTypes.SET_FILTER;
+  payload: {
+    filter: VisibilityFilterTypes;
+  };
+};
+
+export const setFilter = (filter: VisibilityFilterTypes): SetFilterAction => ({
+  type: ActionTypes.SET_FILTER,
+  payload: { filter },
+});
+
+export type TodoActions = SetTodosAction | SetFilterAction;
