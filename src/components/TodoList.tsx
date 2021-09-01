@@ -14,7 +14,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, setTodos }) => {
   useEffect(() => {
     const data: Array<TodoItem> = [
       { id: 1, content: "do something", completed: false },
-      { id: 2, content: "go somewhere", completed: false },
+      { id: 2, content: "go somewhere", completed: true },
     ];
     setTodos(data);
   }, [setTodos]);
